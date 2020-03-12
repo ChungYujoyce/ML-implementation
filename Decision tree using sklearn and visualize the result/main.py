@@ -9,6 +9,7 @@ from sklearn.externals.six import StringIO
 from IPython.display import Image  
 import pydotplus
 
+import matplotlib.pyplot as plt
 from pandas import DataFrame
 import numpy as np
 import sys
@@ -72,6 +73,43 @@ x_train, x_test, y_train, y_test = split_data(data)
 prediction, tree = build_decision_tree(x_train, x_test, y_train)
 evaluate(y_test, prediction)
 visualize_tree(tree)
+
+# ---------try to optimize---------
+#  defines what function will be used to measure the quality of a split
+tree = DecisionTreeClassifier(criterion='gini')
+tree.fit(x_train, y_train)
+pred = tree.predict(x_test)
+print('Criterion=gini', accuracy_score(y_test, pred))
+tree = DecisionTreeClassifier(criterion='entropy')
+tree.fit(x_train, y_train)
+pred = tree.predict(x_test)
+print('Criterion=entropy', accuracy_score(y_test, pred))
+
+max_depth = []
+acc_gini = []
+acc_entropy = []
+for i in range(1,30):
+    tree = DecisionTreeClassifier(criterion = 'gini', max_depth = i)
+    tree.fit(x_train, y_train)
+    pred = tree.predict(x_test)
+    acc_gini.append(accuracy_score(y_test, pred))
+    tree = DecisionTreeClassifier(criterion = 'entropy', max_depth = i)
+    tree.fit(x_train, y_train)
+    pred = tree.predict(x_test)
+    acc_entropy.append(accuracy_score(y_test, pred))
+    max_depth.append(i)
+
+d = pd.DataFrame({'acc_gini':pd.Series(acc_gini), 
+ 'acc_entropy':pd.Series(acc_entropy),
+ 'max_depth':pd.Series(max_depth)})
+# visualizing changes in parameters
+plt.plot('max_depth','acc_gini', data=d, label='gini')
+plt.plot('max_depth','acc_entropy', data=d, label='entropy')
+plt.xlabel('max_depth')
+plt.ylabel('accuracy')
+plt.legend()
+
+plt.imshow()
 
 
 
