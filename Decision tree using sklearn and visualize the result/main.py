@@ -1,6 +1,13 @@
 import pandas as pd
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+# visualize func
+from sklearn.tree import export_graphviz
+from sklearn.externals.six import StringIO
+from IPython.display import Image  
+import pydotplus
 
 from pandas import DataFrame
 import numpy as np
@@ -33,8 +40,30 @@ def load_data(file_path):
     df['Class'] = le.fit_transform(df['Class']) 
     return df
 
-data = load_data("breast-cancer.data")
-def split_data(data):
-    print(data)
 
-print(split_data(data))
+def split_data(data):
+    x = data.iloc[:,1:] # second col to the last
+    y = data.iloc[:,0] # "Class" is our target
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = .28)
+    return x_train, x_test, y_train, y_test
+
+def build_decision_tree(x_train, x_test, y_train):
+    tree = DecisionTreeClassifier()
+    tree.fit(x_train, y_train)
+    pred = tree.predict(x_test)
+    return pred
+
+def evaluate(y_test, pred):
+    accuracy = accuracy_score(y_test, pred)
+    print(f"Accuracy: {accuracy}")
+
+def visualize_tree():
+
+
+data = load_data("breast-cancer.data")
+x_train, x_test, y_train, y_test = split_data(data)
+prediction = build_decision_tree(x_train, x_test, y_train)
+evaluate(y_test, prediction)
+
+
+
