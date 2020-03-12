@@ -51,19 +51,28 @@ def build_decision_tree(x_train, x_test, y_train):
     tree = DecisionTreeClassifier()
     tree.fit(x_train, y_train)
     pred = tree.predict(x_test)
-    return pred
+    return pred, tree
 
 def evaluate(y_test, pred):
     accuracy = accuracy_score(y_test, pred)
     print(f"Accuracy: {accuracy}")
 
-def visualize_tree():
-
+def visualize_tree(tree):
+    """StringIO(): creates an object (empty in this case) to receive a string buffer (the tree will be created first as a string before as an image) in DOT (graph description language) format."""
+    dot_data = StringIO()
+    """export_graphviz(): exports the tree in DOT format, generating a representation of the decision tree, which is written into the ‘out_file’."""
+    export_graphviz(tree, out_file = dot_data)
+    """graph_from_dot_data(): will use the DOT object to create the graph."""
+    graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+    graph.write_png(r'C:\Users\USER\Desktop\ML-implementation\Decision tree using sklearn and visualize the result\tree.png')
+    Image(graph.create_png())
 
 data = load_data("breast-cancer.data")
 x_train, x_test, y_train, y_test = split_data(data)
-prediction = build_decision_tree(x_train, x_test, y_train)
+prediction, tree = build_decision_tree(x_train, x_test, y_train)
 evaluate(y_test, prediction)
+visualize_tree(tree)
+
 
 
 
