@@ -108,8 +108,16 @@ plt.plot('max_depth','acc_entropy', data=d, label='entropy')
 plt.xlabel('max_depth')
 plt.ylabel('accuracy')
 plt.legend()
-
-plt.imshow()
+plt.show()
+"""
+gini works best for longer trees 
+(as we saw in the previous accuracies), 
+but entropy does a better job for shorter trees and it’s more accurate 
+"""
+tree = DecisionTreeClassifier(criterion='entropy', max_depth=7)
+tree.fit(x_train, y_train)
+pred = tree.predict(x_test)
+accuracy_score(y_test, pred)
 
 
 
