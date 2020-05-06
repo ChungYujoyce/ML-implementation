@@ -1,3 +1,7 @@
+'''
+Reference: Kaggle
+https://www.kaggle.com/bulentsiyah/dogs-vs-cats-classification-vgg16-fine-tuning
+'''
 import os
 from tensorflow.keras import layers
 from tensorflow.keras import models
