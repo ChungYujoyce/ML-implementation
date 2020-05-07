@@ -5,7 +5,7 @@ Reference: Google ML tutorial
   and pre-trained on ImageNet, a large dataset of web images (1.4M images and 1000 classes)
 '''
 import os
-
+import tensorflow as tf
 from tensorflow.keras import layers
 from tensorflow.keras import Model
 from tensorflow.keras.applications.inception_v3 import InceptionV3
@@ -79,10 +79,10 @@ unfreeze = False
 
 # Unfreeze all models after "mixed6"
 for layer in pre_trained_model.layers:
-  if unfreeze:
-    layer.trainable = True
-  if layer.name == 'mixed6':
-    unfreeze = True
+    if unfreeze:
+        layer.trainable = True
+    if layer.name == 'mixed6':
+        unfreeze = True
 
 # As an optimizer, here we will use SGD 
 # with a very low learning rate (0.00001)
@@ -93,7 +93,7 @@ model.compile(loss='binary_crossentropy',
               metrics=['acc'])
 
 callbacks = []
-#callbacks.append(tf.keras.callbacks.ModelCheckpoint('./checkpoint.h5', save_best_only=True, save_weights_only=False))
+callbacks.append(tf.keras.callbacks.ModelCheckpoint('./checkpoint.h5', save_best_only=True, save_weights_only=False))
 
 history = model.fit_generator(
       train_generator,
